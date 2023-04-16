@@ -6,11 +6,15 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatstreamapp.databinding.ActivityMainBinding
+import com.example.chatstreamapp.utils.ClientChat
+import com.google.gson.Gson
 import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.models.User
 import io.getstream.chat.android.client.utils.onError
 import io.getstream.chat.android.client.utils.onSuccess
 import io.getstream.chat.android.ui.channel.list.viewmodel.ChannelListViewModel
@@ -30,14 +34,30 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         sharedPreferences = getSharedPreferences("Auth", Context.MODE_PRIVATE)
 
-        // Step 4 - Set the channel list filter and order
-        // This can be read as requiring only channels whose "type" is "messaging" AND
-        // whose "members" include our "user.id"
+        val user = Gson().fromJson(sharedPreferences.getString("user", null), User::class.java)
 
-//        val filter = Filters.and(
-//            Filters.eq("type", "messaging"),
-//            Filters.`in`("members", listOf("arpit"))
-//        )
+        val client = ClientChat.getClient(applicationContext)
+
+        if (user != null){
+            binding.progressBar.visibility = View.VISIBLE
+            client.connectUser(user,client.devToken(user.id),null).enqueue { result ->
+                result.onSuccess {
+                    Toast.makeText(this, it.user.id, Toast.LENGTH_SHORT).show()
+                    sharedPreferences.edit().putString("user", Gson().toJson(it.user)).apply()
+                    binding.progressBar.visibility = View.GONE
+                }
+                result.onError {
+                    Toast.makeText(this, result.error().message.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                    binding.progressBar.visibility = View.GONE
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                }
+            }
+        }else{
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }
 
         val viewModelFactory = ChannelListViewModelFactory(null, ChannelListViewModel.DEFAULT_SORT)
         val viewModel: ChannelListViewModel by viewModels { viewModelFactory }

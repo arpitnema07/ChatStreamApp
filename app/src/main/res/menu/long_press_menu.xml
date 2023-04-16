@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/star"
+        android:icon="@drawable/ic_baseline_star_24"
+        android:title="@string/star"/>
+    <item android:id="@+id/delete"
+        android:icon="@drawable/stream_ui_ic_delete"
+        android:title="@string/stream_ui_message_list_delete_message"/>
+</menu>

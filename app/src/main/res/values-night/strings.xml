@@ -3,4 +3,19 @@
     <string name="guest_login">Guest Login</string>
     <string name="username">Username</string>
     <string name="log_out">Log Out</string>
+    <string name="message">Message</string>
+    <string name="send_message">Send Message</string>
+    <string name="record">Record</string>
+    <string name="play">Play</string>
+    <string name="stop">Stop</string>
+    <string name="recording">Recording…</string>
+    <string name="pause">Pause</string>
+    <string name="send">Send</string>
+    <string name="star">Star</string>
+    <string name="add_audio">Add Audio</string>
+    <string name="downloading">Downloading…</string>
+    <string name="download_complete">Download Completed</string>
+    <string name="profile">Profile</string>
+    <string name="audio">Audio</string>
+    <string name="seen_status">Seen Status</string>
 </resources>

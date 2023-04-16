@@ -8,41 +8,23 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatstreamapp.databinding.ActivityLoginBinding
+import com.example.chatstreamapp.utils.ClientChat
 import com.google.gson.Gson
 import io.getstream.chat.android.client.ChatClient
-import io.getstream.chat.android.client.logger.ChatLogLevel
 import io.getstream.chat.android.client.models.User
 import io.getstream.chat.android.client.utils.onError
 import io.getstream.chat.android.client.utils.onSuccess
-import io.getstream.chat.android.core.internal.InternalStreamChatApi
-import io.getstream.chat.android.offline.model.message.attachments.UploadAttachmentsNetworkType
-import io.getstream.chat.android.offline.plugin.configuration.Config
-import io.getstream.chat.android.offline.plugin.factory.StreamOfflinePluginFactory
 
 class LoginActivity : AppCompatActivity() {
 
-    @OptIn(InternalStreamChatApi::class)
     override fun onResume() {
         super.onResume()
         val user = Gson().fromJson(sharedPreferences.getString("user", null), User::class.java)
-
-        if (client.containsStoredCredentials() && user != null){
+        if (user != null){
             binding.progressBar.visibility = View.VISIBLE
             binding.login.isEnabled = false
-            client.connectUser(user,client.devToken(user.id),null).enqueue { result ->
-                result.onSuccess {
-                    Toast.makeText(this, it.user.id, Toast.LENGTH_SHORT).show()
-                    sharedPreferences.edit().putString("user", Gson().toJson(it.user)).apply()
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                }
-                result.onError {
-                    Toast.makeText(this, result.error().message.toString(), Toast.LENGTH_SHORT)
-                        .show()
-                    binding.login.isEnabled = true
-                    binding.progressBar.visibility = View.GONE
-                }
-            }
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
     private lateinit var binding: ActivityLoginBinding
@@ -55,22 +37,7 @@ class LoginActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences("Auth", Context.MODE_PRIVATE)
 
 
-        // Step 1 - Set up the OfflinePlugin for offline storage
-        val offlinePluginFactory = StreamOfflinePluginFactory(
-            config = Config(
-                backgroundSyncEnabled = true,
-                userPresence = true,
-                persistenceEnabled = true,
-                uploadAttachmentsNetworkType = UploadAttachmentsNetworkType.NOT_ROAMING,
-            ),
-            appContext = applicationContext,
-        )
-
-        // Step 2 - Set up the client for API calls with the plugin for offline storage
-        client = ChatClient.Builder("4fb96hudgtjx", applicationContext)
-            .withPlugin(offlinePluginFactory)
-            .logLevel(ChatLogLevel.ALL) // Set to NOTHING in prod
-            .build()
+        val client = ClientChat.getClient(applicationContext)
 
         binding.login.setOnClickListener {
             val username = binding.usernameEditText.text.toString()

@@ -28,7 +28,7 @@
         android:id="@+id/messageListView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/messageInputView"
+        app:layout_constraintBottom_toTopOf="@+id/input_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/typingHeaderView"
@@ -37,13 +37,52 @@
         app:streamUiMessageTextColorMine="#FFFFFF"
         app:streamUiMessageTextColorTheirs="#000000"/>
 
-    <io.getstream.chat.android.ui.message.input.MessageInputView
-        android:id="@+id/messageInputView"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/input_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:streamUiAttachButtonEnabled="false"/>
+        app:layout_constraintStart_toStartOf="parent" >
+
+
+        <ImageView
+            android:id="@+id/add_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_add_24"
+            android:layout_margin="12dp"
+            android:contentDescription="@string/add_audio" />
+
+        <EditText
+            android:id="@+id/msg_edit_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/send_msg"
+            app:layout_constraintStart_toEndOf="@id/add_audio"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginHorizontal="16dp"
+            android:padding="12dp"
+            android:hint="@string/message"
+            android:background="@null"
+            android:importantForAutofill="no"
+            android:inputType="text"/>
+
+        <ImageView
+            android:id="@+id/send_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_mic_24"
+            android:layout_margin="12dp"
+            android:contentDescription="@string/send_message" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
